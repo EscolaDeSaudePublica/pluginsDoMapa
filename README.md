@@ -9,3 +9,18 @@ Todos os plugins aqui nesse repositório foram feitos um PULL REQUEST para o rep
 Todos os plugins deve obdecer a estrutura desenvolvida e aceita dentro da aplicação do mapas como mostra nesse [link](https://github.com/mapasculturais/mapasculturais-base-project/tree/master/plugins)
 
 Todo plugin deve está dentro de uma pasta que tem o nome do plugin.
+
+## Como instalar
+- Dentro do seu tema deve está configurado todos os plugins que o seu projeto está usando, caso contrário, poderá criar ou adicionar no seu arquivo chamado conf-base.php com o seguinte trecho de código.
+```
+'plugins' => [
+  'ProjectPhases' => ['namespace' => 'ProjectPhases'],
+  'AgendaSingles' => ['namespace' => 'AgendaSingles']
+]
+```
+
+- Clonar do repositório o plugin que deseja utilizar
+
+
+### Obs: Seguir o documento do repositório oficial do Mapas da Cultura
+https://github.com/mapasculturais/mapasculturais/blob/develop/documentation/docs/mc_config_plugins.md
