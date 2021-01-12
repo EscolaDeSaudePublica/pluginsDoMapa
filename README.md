@@ -19,8 +19,24 @@ Todo plugin deve está dentro de uma pasta que tem o nome do plugin.
 ]
 ```
 
-- Clonar do repositório o plugin que deseja utilizar
-
-
-### Obs: Seguir o documento do repositório oficial do Mapas da Cultura
+### Obs 01: Seguir o documento do repositório oficial do Mapas da Cultura
 https://github.com/mapasculturais/mapasculturais/blob/develop/documentation/docs/mc_config_plugins.md
+
+### Obs 02: Renomeando o clone
+- Clonar do repositório o plugin que deseja utilizar dentro da pasta *plugins* que fica em src/protected/application/
+
+Ao clonar o repositório irá baixar todos os plugins, portanto poderá fazer os seguintes comandos:
+1 - Para clocar com o nome do plugin desejavo
+```
+git clone https://github.com/EscolaDeSaudePublica/pluginsDoMapa.git --recursive
+```
+Acessa o repositório do clone com
+```
+cd pluginsDoMapa
+``` 
+Remove o seu plugin desejado do repositório e coloca o mesmo na sua aplicação, como por exemplo 
+```
+mv LocationStateCity/ ../
+```
+Se desejar o plugim de LocationStateCity
+
