@@ -38,5 +38,5 @@ Remove o seu plugin desejado do repositório e coloca o mesmo na sua aplicação
 ```
 mv LocationStateCity/ ../
 ```
-Se desejar o plugim de LocationStateCity
+Se desejar o plugin de LocationStateCity
 
