@@ -17,7 +17,7 @@ class Plugin extends \MapasCulturais\Plugin {
 
         // add hooks
         $app = App::i();
-        $this->jsObject['angularAppDependencies'][] = 'entity.module.opportunity'; 
+        $app->view->enqueueScript('app', 'locationStateCity', 'js/locationStateCity.js'); 
         $app->hook('GET(location.locationState)', function () use($app){
             echo "Location";
         });
