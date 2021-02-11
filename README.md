@@ -18,6 +18,12 @@ Todo plugin deve está dentro de uma pasta que tem o nome do plugin.
   'AgendaSingles' => ['namespace' => 'AgendaSingles']
 ]
 ```
+Você deve adicionar mais um indice no seu array de plugins
+``` 
+  'LocationStateCity' => [
+      'namespace' => 'LocationStateCity'
+  ],
+```
 
 ### Obs 01: Seguir o documento do repositório oficial do Mapas da Cultura
 https://github.com/mapasculturais/mapasculturais/blob/develop/documentation/docs/mc_config_plugins.md
