@@ -46,3 +46,9 @@ mv LocationStateCity/ ../
 ```
 Se desejar o plugin de LocationStateCity
 
+Você também poderá remover o repositório com o seguinte comando, pois haverá outros plugins que queira usar.
+```
+cd ..
+sudo rm -R pluginsDoMapa/
+``` 
+
