@@ -17,9 +17,12 @@ class Plugin extends \MapasCulturais\Plugin {
 
         // add hooks
         $app = App::i();
-        $app->view->enqueueScript('app', 'locationStateCity', 'js/locationStateCity.js'); 
-        $app->hook('GET(location.locationState)', function () use($app){
-            echo "Location";
+         
+        $app->hook('template(agent.<<single|create|edit>>.tabs-content):end', function() use($app){
+            $app->view->enqueueScript('app', 'locationStateCity', 'js/locationStateCity.js');
+        });
+        $app->hook('template(space.<<single|create|edit>>.tabs-content):end', function() use($app){
+            $app->view->enqueueScript('app', 'locationStateCity', 'js/locationStateCity.js');
         });
     }
 
