@@ -12,6 +12,7 @@ class Plugin extends \MapasCulturais\Plugin {
 
         //
         $app->hook('template(opportunity.single.header-inscritos):end', function () use ($app) {
+            $app->view->enqueueScript('app', 'pdfreport', 'js/pdfreport.js');
             $this->part('reports/buttons-report');
         });
     }
