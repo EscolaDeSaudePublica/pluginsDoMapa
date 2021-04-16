@@ -55,5 +55,8 @@ Cada Plugin está em uma branch específica e para baixar o seu plugin desejado 
 ```
 git clone -b <branch> < remote_repo >
 ```
-Por exemplo: git clone -b PDFReport https://github.com/EscolaDeSaudePublica/pluginsDoMapa.git
+Por exemplo: 
+```
+git clone -b  PDFReport  https://github.com/EscolaDeSaudePublica/pluginsDoMapa.git
+```
 
