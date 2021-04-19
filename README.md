@@ -51,4 +51,12 @@ Você também poderá remover o repositório com o seguinte comando, pois haver�
 cd ..
 sudo rm -R pluginsDoMapa/
 ``` 
+Cada Plugin está em uma branch específica e para baixar o seu plugin desejado você deve digitar o seguinte código:
+```
+git clone -b <branch> < remote_repo >
+```
+Por exemplo: 
+```
+git clone -b  PDFReport  https://github.com/EscolaDeSaudePublica/pluginsDoMapa.git
+```
 
