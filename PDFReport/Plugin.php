@@ -13,7 +13,22 @@ class Plugin extends \MapasCulturais\Plugin {
         //
         $app->hook('template(opportunity.single.header-inscritos):end', function () use ($app) {
             $app->view->enqueueScript('app', 'pdfreport', 'js/pdfreport.js');
-            $this->part('reports/buttons-report');
+            $entity = $this->controller->requestedEntity;
+            dump($entity->metadata);
+            $resource = false;
+            //VERIFICANDO SE TEM A INDICAÇÃO DE RECURSO
+            $isResource = array_key_exists('claimDisabled', $entity->metadata);
+            //SE HOUVER O CAMPO FAZ O FOREACH
+            if($isResource) {
+                foreach ($entity->metadata as $key => $value) {
+                    //SE O CAMPO EXISTIR E TIVER RECURSO HABILITADO
+                    if($key == 'claimDisabled' && $value == 0) {
+                        $resource = true;
+                    }
+                }
+            }
+            
+            $this->part('reports/buttons-report',['resource' => $resource]);
         });
     }
 

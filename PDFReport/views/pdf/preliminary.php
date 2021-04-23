@@ -54,9 +54,9 @@
         </tr>
     </table>
     <br>
+    <?php foreach ($opp->registrationCategories as $key => $nameCategory) { ?>
     <table class="table table-striped table-bordered">
-        <thead>
-        <?php foreach ($opp->registrationCategories as $key => $nameCategory) { ?>
+        <thead>       
         <tr class="activeTr">
         <th colspan="3">
             <?php echo $nameCategory; ?>
@@ -68,21 +68,31 @@
                 <th>Nota</th>
             </tr>
             <?php 
+            $isValue = 0;
             foreach ($sub as $key => $value) {
-                if($nameCategory == $value->category){ ?>
+                echo "nameCategory =".$nameCategory." |category = ".$value->category."<br>";
+                if($nameCategory !== $value->category){
+                    $isValue = 0;
+                    dump($isValue);
+                }
+                if($nameCategory == $value->category){ 
+                $isValue = 1;
+                //echo "if = ".$isValue;
+            ?>
             <tr>
                 <td><?php echo $value->number; ?></td>
                 <td><?php echo $value->owner->name; ?></td>
                 <td><?php echo $value->preliminaryResult; ?></td>
             </tr>
-            <?php }else{?>
-                <tr>
+            <?php }?>
+               
+            <?php 
+                if($isValue == 0) : ?>
+                 <tr>
                     <td  colspan="3">Nao existe</td>
                 
                 </tr>
-            <?php 
-            //break; 
-            }
+            <?php endif;
             } 
         } ?>
         </thead>

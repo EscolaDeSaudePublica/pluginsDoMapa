@@ -8,7 +8,8 @@
 <a class="btn btn-default" title="Imprimir Resultado Simiples"  ng-click="editbox.open('report-evaluation-documental-options', $event)" rel="noopener noreferrer">
     <i class="fa fa-file-o" aria-hidden="true"></i>
 </a> -->
-<form action="http://localhost/pdf/gerarPdf" method="POST">
+<?php dump($resource); ?>
+<form action="http://localhost/pdf/gerarPdf" method="POST" target="TargetWindow">
 <select name="selectRel" id="selectRel" class="" style="margin-left: 10px;">
     <option value="0">--Selecione--</option>
     <option value="1">Relação de Inscritos</option>

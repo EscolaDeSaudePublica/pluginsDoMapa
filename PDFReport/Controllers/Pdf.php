@@ -18,6 +18,7 @@ class Pdf extends \MapasCulturais\Controller{
         $regs = "";
         $title = "";
         $opp = "";
+        $template = "";
         switch ($this->postData['selectRel']) {
             case 0:
                 # code...
@@ -27,6 +28,7 @@ class Pdf extends \MapasCulturais\Controller{
                     ['opportunity' => $this->postData['idopportunityReport']
                 ]);
                 $title = 'Relatório de inscritos na oportunidade';
+                $template = 'pdf/subscribers';
                 break;
             case 2:
                 $opp = $app->repo('Opportunity')->find($this->postData['idopportunityReport']);
@@ -35,6 +37,7 @@ class Pdf extends \MapasCulturais\Controller{
                     'status' => 10
                 ]);
                 $title = 'Resultado Preliminar do Certame';
+                $template = 'pdf/preliminary';
                 break;
             case 3:
                 
@@ -57,7 +60,7 @@ class Pdf extends \MapasCulturais\Controller{
         //$app->render('pdf/preliminary');
         //die();
         //$content = $app->render('pdf/preliminary');
-        $content = $app->view->fetch('pdf/preliminary');
+        $content = $app->view->fetch($template);
         //$content = $app->render('pdf/layout', array('report' => $report)); 
         $domPdf->loadHtml($content);
         $domPdf->setPaper('A4', 'portrait');
