@@ -14,7 +14,6 @@ class Plugin extends \MapasCulturais\Plugin {
         $app->hook('template(opportunity.single.header-inscritos):end', function () use ($app) {
             $app->view->enqueueScript('app', 'pdfreport', 'js/pdfreport.js');
             $entity = $this->controller->requestedEntity;
-            dump($entity->metadata);
             $resource = false;
             //VERIFICANDO SE TEM A INDICAÇÃO DE RECURSO
             $isResource = array_key_exists('claimDisabled', $entity->metadata);
@@ -27,7 +26,6 @@ class Plugin extends \MapasCulturais\Plugin {
                     }
                 }
             }
-            
             $this->part('reports/buttons-report',['resource' => $resource]);
         });
     }

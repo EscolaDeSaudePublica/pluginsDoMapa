@@ -15,10 +15,10 @@ class Pdf extends \MapasCulturais\Controller{
         if($this->postData['selectRel'] != 1) {
             
         }
-        $regs = "";
-        $title = "";
-        $opp = "";
-        $template = "";
+        $regs       = "";
+        $title      = "";
+        $opp        = "";
+        $template   = "";
         switch ($this->postData['selectRel']) {
             case 0:
                 # code...
@@ -27,8 +27,8 @@ class Pdf extends \MapasCulturais\Controller{
                 $regs = $app->repo('Registration')->findBy(
                     ['opportunity' => $this->postData['idopportunityReport']
                 ]);
-                $title = 'Relatório de inscritos na oportunidade';
-                $template = 'pdf/subscribers';
+                $title      = 'Relatório de inscritos na oportunidade';
+                $template   = 'pdf/subscribers';
                 break;
             case 2:
                 $opp = $app->repo('Opportunity')->find($this->postData['idopportunityReport']);
@@ -36,30 +36,27 @@ class Pdf extends \MapasCulturais\Controller{
                     ['opportunity' => $this->postData['idopportunityReport'],
                     'status' => 10
                 ]);
-                $title = 'Resultado Preliminar do Certame';
-                $template = 'pdf/preliminary';
+                $title      = 'Resultado Preliminar do Certame';
+                $template   = 'pdf/preliminary';
                 break;
             case 3:
-                
-                $regs = $app->repo('Registration')->findBy(
-                    ['opportunity' => $this->postData['idopportunityReport'],
-                    'status' => 10
-                ]);
-                $title = 'Relatório definitivo';
+                $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
                 break;
-            
+            case 4:
+                $regs = $app->repo('Registration')->findBy(
+                    ['opportunity' => $this->postData['idopportunityReport']
+                ]);
+                $title      = 'Relatório de contato';
+                $template   = 'pdf/contact';
+                break;
             default:
                 $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
                 break;
         }
-        
-        
         $app->view->jsObject['opp'] = $opp;
         $app->view->jsObject['subscribers'] = $regs;
         $app->view->jsObject['title'] = $title;
-        //$app->render('pdf/preliminary');
-        //die();
-        //$content = $app->render('pdf/preliminary');
+
         $content = $app->view->fetch($template);
         //$content = $app->render('pdf/layout', array('report' => $report)); 
         $domPdf->loadHtml($content);
