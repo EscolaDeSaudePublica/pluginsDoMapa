@@ -3,8 +3,8 @@
     $sub = $app->view->jsObject['subscribers'];
     $nameOpportunity = $sub[0]->opportunity->name;
     $opp = $app->view->jsObject['opp'];
-?>
 
+?>
 <style>
 .activeTr{
     background-color: #c3c3c3;
@@ -32,14 +32,15 @@
         <table class="table table-striped table-bordered">
             <thead>
                 <tr class="activeTr">
-                    <th colspan="3">
+                    <th colspan="4">
                         <?php echo $nameCat; ?>
                     </th>
                 </tr>
                 <tr style="background-color: #009353; color:white">
                     <th>Inscrição</th>
                     <th>Nome</th>
-                    <th>Nota</th>
+                    <th>Nota Pre.</th>
+                    <th>Nota Def.</th>
                 </tr>
             </thead>
             <tbody>
@@ -53,6 +54,7 @@
                         <td><?php echo $nameSub->number; ?></td>
                         <td><?php echo $nameSub->owner->name; ?></td>
                         <td><?php echo $nameSub->preliminaryResult; ?></td>
+                        <td><?php echo $nameSub->consolidatedResult; ?></td>
                     </tr>
                 <?php
                 //EXCLUINDO O INDICE DO ARRAY PARA O PROXIMO LOOP

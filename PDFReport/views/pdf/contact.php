@@ -2,12 +2,8 @@
     $this->layout = 'nolayout'; 
     $contact = $app->view->jsObject['subscribers'];
     $nameOpportunity = $contact[0]->opportunity->name;
-// foreach ($contact as $key => $value) {
-//     dump($value->owner->metadata);
-// }
-// die();
 ?>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
 <div class="container">
     <?php include_once('header.php'); ?>
     <table width="100%">

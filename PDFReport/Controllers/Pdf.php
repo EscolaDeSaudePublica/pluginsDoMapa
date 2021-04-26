@@ -40,7 +40,36 @@ class Pdf extends \MapasCulturais\Controller{
                 $template   = 'pdf/preliminary';
                 break;
             case 3:
-                $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
+                //JOIN COM OPORTUNITY E RESOURCE COM AMBOS PUBLICADO
+                $id = $this->postData['idopportunityReport'];
+                //SELECT AOS RECURSOS
+                $dql = "SELECT r
+                FROM 
+                Saude\Entities\Resources r
+                WHERE r.opportunityId = {$id}";
+                $query = $app->em->createQuery($dql);
+                $resource = $query->getResult();
+                $countPublish = 0;//INICIANDO VARIAVEL COM 0
+                foreach ($resource as $key => $value) {
+                    if($value->replyPublish == 1 && $value->opportunityId->publishedRegistrations == 1) {
+                        $countPublish++;//SE ENTRAR INCREMENTA A VARIAVEL
+                    }else{
+                        $countPublish = 0;
+                    }
+                }
+                //SE OS DOIS VALORES BATEREM, ENTÃO GERA O PDF
+                if($countPublish == count($resource)) {
+                    $opp = $app->repo('Opportunity')->find($this->postData['idopportunityReport']);
+                    $regs = $app->repo('Registration')->findBy(
+                        ['opportunity' => $this->postData['idopportunityReport'],
+                        'status' => 10
+                    ]);
+                    $title      = 'Resultado Preliminar do Certame';
+                    $template   = 'pdf/definitive';
+                }else{
+                    //SE NÃO, VOLTA PARA A PÁGINA DA OPORTUNIDADE COM AVISO
+                    $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
+                }
                 break;
             case 4:
                 $regs = $app->repo('Registration')->findBy(

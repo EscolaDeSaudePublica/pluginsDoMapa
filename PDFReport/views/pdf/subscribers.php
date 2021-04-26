@@ -3,7 +3,6 @@
     $sub = $app->view->jsObject['subscribers'];
     $nameOpportunity = $sub[0]->opportunity->name;
 ?>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <div class="container">
     <?php include_once('header.php'); ?>
     <table width="100%">
