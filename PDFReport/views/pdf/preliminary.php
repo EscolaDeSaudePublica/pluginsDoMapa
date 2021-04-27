@@ -29,7 +29,7 @@
     <br>
     <?php 
     foreach ($opp->registrationCategories as $key => $nameCat) :?>
-        <table class="table table-striped table-bordered">
+        <table class="table table-striped">
             <thead>
                 <tr class="activeTr">
                     <th colspan="3">
@@ -37,9 +37,9 @@
                     </th>
                 </tr>
                 <tr style="background-color: #009353; color:white">
-                    <th>Inscrição</th>
+                    <th class="space-tbody-15">Inscrição</th>
                     <th>Nome</th>
-                    <th>Nota</th>
+                    <th class="text-center space-tbody-10">Nota</th>
                 </tr>
             </thead>
             <tbody>
@@ -50,9 +50,9 @@
                     //SE AS CATEGORIAS FOREM IGUAIS, IMPRIME AS INFORMAÇÕES
                     if($nameCat == $nameSub->category):?>
                     <tr>
-                        <td><?php echo $nameSub->number; ?></td>
+                        <td class="space-tbody-15"><?php echo $nameSub->number; ?></td>
                         <td><?php echo $nameSub->owner->name; ?></td>
-                        <td><?php echo $nameSub->preliminaryResult; ?></td>
+                        <td class="text-center space-tbody-10"><?php echo $nameSub->preliminaryResult; ?></td>
                     </tr>
                 <?php
                 //EXCLUINDO O INDICE DO ARRAY PARA O PROXIMO LOOP

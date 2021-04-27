@@ -24,23 +24,24 @@ class Pdf extends \MapasCulturais\Controller{
                 # code...
                 break;
             case 1:
-                $regs = $app->repo('Registration')->findBy(
-                    ['opportunity' => $this->postData['idopportunityReport']
-                ]);
+                $regs = $this->oportunityRegistrationApreved($this->postData['idopportunityReport']);
+                if(empty($regs['regs'])){
+                    $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
+                }
                 $title      = 'Relatório de inscritos na oportunidade';
                 $template   = 'pdf/subscribers';
                 break;
             case 2:
-                $opp = $app->repo('Opportunity')->find($this->postData['idopportunityReport']);
-                $regs = $app->repo('Registration')->findBy(
-                    ['opportunity' => $this->postData['idopportunityReport'],
-                    'status' => 10
-                ]);
+                //BUSCANDO TODOS OS REGISTROS
+                $regs = $this->oportunityRegistrationApreved($this->postData['idopportunityReport']);
+                if(empty($regs['regs'])){
+                    $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
+                }
                 $title      = 'Resultado Preliminar do Certame';
                 $template   = 'pdf/preliminary';
                 break;
             case 3:
-                //JOIN COM OPORTUNITY E RESOURCE COM AMBOS PUBLICADO
+                //ESSE CASE, VERIFICA SE OS RECURSOS E A OPORTUNIDADE
                 $id = $this->postData['idopportunityReport'];
                 //SELECT AOS RECURSOS
                 $dql = "SELECT r
@@ -58,13 +59,10 @@ class Pdf extends \MapasCulturais\Controller{
                     }
                 }
                 //SE OS DOIS VALORES BATEREM, ENTÃO GERA O PDF
-                if($countPublish == count($resource)) {
-                    $opp = $app->repo('Opportunity')->find($this->postData['idopportunityReport']);
-                    $regs = $app->repo('Registration')->findBy(
-                        ['opportunity' => $this->postData['idopportunityReport'],
-                        'status' => 10
-                    ]);
-                    $title      = 'Resultado Preliminar do Certame';
+                //O PDF SOMENTE SERÁ GERADO NA EVENTUALIDADE DA AOPORTUNIDADE ESTÁ PUBLICADA E OS RECURSOS TBM ESTIVEREM PUBLICADOS
+                if($countPublish == count($resource) && $countPublish > 0 && count($resource) > 0) {
+                    $regs = $this->oportunityRegistrationApreved($this->postData['idopportunityReport']);
+                    $title      = 'Resultado Definitivo do Certame';
                     $template   = 'pdf/definitive';
                 }else{
                     //SE NÃO, VOLTA PARA A PÁGINA DA OPORTUNIDADE COM AVISO
@@ -72,9 +70,10 @@ class Pdf extends \MapasCulturais\Controller{
                 }
                 break;
             case 4:
-                $regs = $app->repo('Registration')->findBy(
-                    ['opportunity' => $this->postData['idopportunityReport']
-                ]);
+                $regs = $this->oportunityRegistrationApreved($this->postData['idopportunityReport']);
+                if(empty($regs['regs'])){
+                    $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
+                }
                 $title      = 'Relatório de contato';
                 $template   = 'pdf/contact';
                 break;
@@ -82,8 +81,8 @@ class Pdf extends \MapasCulturais\Controller{
                 $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
                 break;
         }
-        $app->view->jsObject['opp'] = $opp;
-        $app->view->jsObject['subscribers'] = $regs;
+        $app->view->jsObject['opp'] = $regs['opp'];
+        $app->view->jsObject['subscribers'] = $regs['regs'];
         $app->view->jsObject['title'] = $title;
 
         $content = $app->view->fetch($template);
@@ -97,28 +96,25 @@ class Pdf extends \MapasCulturais\Controller{
         exit(0);
     }
 
-    function GET_dadosCandidato() {
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
-//         $app = App::i();
-//         //dump($this->getData);
-//         $dompdf = new Dompdf();
-//         $report = EntitiesResources::find($this->getData['id']);
-//         // $this->render('printResource', ['report' => $report, 'dompdf' => $dompdf]);
-//         $content = $app->view->fetch('recursos/printResource', ['report' => $report, 'dompdf' => $dompdf]);
-// //         $html = file_get_contents("https://github.com/dompdf/dompdf"); 
-//         $dompdf->loadHtml($content);
+    /**
+     * Busca a oportunidade e todos os aprovados da inscrição 
+     *
+     * @param [integer] $idopportunity
+     * @return void array
+     */
+    function oportunityRegistrationApreved($idopportunity) 
+    {
+        $app = App::i();
+        $opp = $app->repo('Opportunity')->find($idopportunity);
+        $regs = $app->repo('Registration')->findBy(
+            [
+            'opportunity' => $idopportunity,
+            'status' => 10
+            ]
+        );
 
-// // (Optional) Setup the paper size and orientation
-//         $dompdf->setPaper('A4', 'landscape');
-
-//         // Render the HTML as PDF
-//         $dompdf->render();
-
-//         // Output the generated PDF to Browser
-//         $dompdf->stream();
-
-
+        return ['opp' => $opp, 'regs' => $regs];
     }
+
 }
 

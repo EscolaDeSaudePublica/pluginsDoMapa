@@ -5,15 +5,7 @@
     $opp = $app->view->jsObject['opp'];
 
 ?>
-<style>
-.activeTr{
-    background-color: #c3c3c3;
-    /* border: 1px solid black; */
-    margin-top: 15px;
-    color: saddlebrown;
-    border-radius: 5px;
-}
-</style>
+
 <div class="container">
     <?php include_once('header.php'); ?>
     <table width="100%">
@@ -29,7 +21,7 @@
     <br>
     <?php 
     foreach ($opp->registrationCategories as $key => $nameCat) :?>
-        <table class="table table-striped table-bordered">
+        <table class="table table-striped">
             <thead>
                 <tr class="activeTr">
                     <th colspan="4">
@@ -37,10 +29,10 @@
                     </th>
                 </tr>
                 <tr style="background-color: #009353; color:white">
-                    <th>Inscrição</th>
+                    <th class="space-tbody-15">Inscrição</th>
                     <th>Nome</th>
-                    <th>Nota Pre.</th>
-                    <th>Nota Def.</th>
+                    <th class="text-center space-tbody-10">Nota Pre.</th>
+                    <th class="text-center space-tbody-10">Nota Def.</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,10 +43,10 @@
                     //SE AS CATEGORIAS FOREM IGUAIS, IMPRIME AS INFORMAÇÕES
                     if($nameCat == $nameSub->category):?>
                     <tr>
-                        <td><?php echo $nameSub->number; ?></td>
+                        <td class="space-tbody-15"><?php echo $nameSub->number; ?></td>
                         <td><?php echo $nameSub->owner->name; ?></td>
-                        <td><?php echo $nameSub->preliminaryResult; ?></td>
-                        <td><?php echo $nameSub->consolidatedResult; ?></td>
+                        <td class="text-center space-tbody-10"><?php echo $nameSub->preliminaryResult; ?></td>
+                        <td class="text-center space-tbody-10"><?php echo $nameSub->consolidatedResult; ?></td>
                     </tr>
                 <?php
                 //EXCLUINDO O INDICE DO ARRAY PARA O PROXIMO LOOP
@@ -68,7 +60,7 @@
                 //SE FOR FALSO - IMPRIME A INFORMAÇÃO
                 if(!$isExist) :?>
                     <tr>
-                        <td colspan="3"><?php \MapasCulturais\i::_e("Não houve candidato selecionado nessa categoria");?></td>
+                        <td colspan="4"><?php \MapasCulturais\i::_e("Não houve candidato selecionado nessa categoria");?></td>
                     </tr>
             <?php    
                 endif;
@@ -79,4 +71,4 @@
 </div>
 <?php 
     //die;
-    ?>
+?>
