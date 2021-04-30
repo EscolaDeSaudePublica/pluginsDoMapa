@@ -27,7 +27,9 @@
         </thead>
         <tbody>
         </tbody>
-        <?php foreach ($contact as $key => $value) { ?>
+        <?php foreach ($contact as $key => $value) {
+                //$agent = $app->repo('Agent')->find($value->owner->id); 
+        ?>
         <tr>
             <td>
                 <?php echo $value->number; ?>

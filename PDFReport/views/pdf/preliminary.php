@@ -3,17 +3,9 @@
     $sub = $app->view->jsObject['subscribers'];
     $nameOpportunity = $sub[0]->opportunity->name;
     $opp = $app->view->jsObject['opp'];
+    $claimDisabled = $app->view->jsObject['claimDisabled'];
 ?>
 
-<style>
-.activeTr{
-    background-color: #c3c3c3;
-    /* border: 1px solid black; */
-    margin-top: 15px;
-    color: saddlebrown;
-    border-radius: 5px;
-}
-</style>
 <div class="container">
     <?php include_once('header.php'); ?>
     <table width="100%">
@@ -28,53 +20,23 @@
     </table>
     <br>
     <?php 
-    foreach ($opp->registrationCategories as $key => $nameCat) :?>
-        <table class="table table-striped">
-            <thead>
-                <tr class="activeTr">
-                    <th colspan="3">
-                        <?php echo $nameCat; ?>
-                    </th>
-                </tr>
-                <tr style="background-color: #009353; color:white">
-                    <th class="space-tbody-15">Inscrição</th>
-                    <th>Nome</th>
-                    <th class="text-center space-tbody-10">Nota</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php 
-                $isExist = false;
-                //LOOP NOS CANDIDATOS
-                foreach ($sub as $key => $nameSub):
-                    //SE AS CATEGORIAS FOREM IGUAIS, IMPRIME AS INFORMAÇÕES
-                    if($nameCat == $nameSub->category):?>
-                    <tr>
-                        <td class="space-tbody-15"><?php echo $nameSub->number; ?></td>
-                        <td><?php echo $nameSub->owner->name; ?></td>
-                        <td class="text-center space-tbody-10"><?php echo $nameSub->preliminaryResult; ?></td>
-                    </tr>
-                <?php
-                //EXCLUINDO O INDICE DO ARRAY PARA O PROXIMO LOOP
-                unset($sub[$key]);
-                    endif;
-                    //SE NÃO EXISTIR REGISTRO NO INDICE DO ARRAY ENTÃO ALTERA PARA TRUE
-                    if(!isset($nameSub->id)):
-                        $isExist = true;
-                    endif;
-                endforeach;
-                //SE FOR FALSO - IMPRIME A INFORMAÇÃO
-                if(!$isExist) :?>
-                    <tr>
-                        <td colspan="3"><?php \MapasCulturais\i::_e("Não houve candidato selecionado nessa categoria");?></td>
-                    </tr>
-            <?php    
-                endif;
-            ?>
-            </tbody>
-        </table>
-    <?php endforeach; ?>
+        //REDIRECIONA PARA OPORTUNIDADE CASO NÃO HAJA CATEGORIA        
+        $type = $opp->evaluationMethodConfiguration->type->id;
+        //QUANDO NÃO TIVER RECURSO OU ESTIVER DESABILITADO
+        if($opp->registrationCategories == "" &&  $type == 'technical'){
+            include_once('preliminary/technical-no-category.php');
+        }elseif($opp->registrationCategories == "" &&  $type == 'simple'|| $type == 'documentary'){
+            include_once('preliminary/simple-documentary-no-category.php');
+        }
+
+        if($opp->registrationCategories !== "" &&  $type == 'technical'){
+            $preliminary = true;
+            include_once('technical-category.php');
+        }elseif($opp->registrationCategories !== "" &&  $type == 'simple'|| $type == 'documentary'){
+            include_once('preliminary/simple-documentary-category.php');
+        }
+    ?>
 </div>
 <?php 
-    //die;
+   // die;
     ?>

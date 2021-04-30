@@ -12,8 +12,12 @@ class Pdf extends \MapasCulturais\Controller{
         ini_set('display_errors', 1);
         error_reporting(E_ALL);
         $app = App::i();
+        if($this->postData['selectRel'] != 1) {
+            
+        }
         $regs       = "";
         $title      = "";
+        $opp        = "";
         $template   = "";
         //NULO PARA CASOS DE NÃO TER RECURSO
         $claimDisabled = null;
@@ -33,6 +37,13 @@ class Pdf extends \MapasCulturais\Controller{
                 if(empty($regs['regs'])){
                     $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
                 }
+                $verifyResource = $this->verifyResource($this->postData['idopportunityReport']);
+                    
+                //SE TIVER RECURSO, RECEBE O VALOR QUE ESTÁ NA TABELA
+                if(isset($verifyResource[0])){
+                    $claimDisabled = $verifyResource[0]->value;
+                }
+               
                 $title      = 'Resultado Preliminar do Certame';
                 $template   = 'pdf/preliminary';
                 break;
@@ -58,6 +69,7 @@ class Pdf extends \MapasCulturais\Controller{
                 //O PDF SOMENTE SERÁ GERADO NA EVENTUALIDADE DA AOPORTUNIDADE ESTÁ PUBLICADA E OS RECURSOS TBM ESTIVEREM PUBLICADOS
                 if($countPublish == count($resource) && $countPublish > 0 && count($resource) > 0) {
                     $regs = $this->oportunityRegistrationAproved($this->postData['idopportunityReport'], 10);
+                    
                     $title      = 'Resultado Definitivo do Certame';
                     $template   = 'pdf/definitive';
 
@@ -72,16 +84,31 @@ class Pdf extends \MapasCulturais\Controller{
                     }
                     //VERIFICANDO SE TEM RECURSO
                     $verifyResource = $this->verifyResource($this->postData['idopportunityReport']);
-
+                    
                     //SE TIVER RECURSO, RECEBE O VALOR QUE ESTÁ NA TABELA
                     if(isset($verifyResource[0])){
                         $claimDisabled = $verifyResource[0]->value;
                     }
+                   
+                    // dump(isset($regs['regs'][0]));
+                    // dump($regs['regs']);
+                    // dump($verifyResource);
+                    //die;
                     //EM CASOS DE TER INSCRIÇÃO MAS NÃO TEM RECURSO OU ESTÁ DESABILITADO
                     if(isset($regs['regs'][0]) && empty($verifyResource) || $claimDisabled == 1 ){
                         $title      = 'Resultado Definitivo do Certame';
                         $template   = 'pdf/definitive';
-                    }else{
+                    }
+                    else 
+                    //CASO ESTEJA PUBLICADO E NÃO TEM RECURSO
+                    // if($regs['regs'] > 0 && empty($verifyResource) ){
+                    //     dump($verifyResource);
+                    //     die;
+                    //     $title      = 'Resultado Definitivo do Certame';
+                    //     $template   = 'pdf/definitive';
+                        
+                    // }else
+                    {
                         $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport'].'#/tab=inscritos'), 401);
                     }
                    

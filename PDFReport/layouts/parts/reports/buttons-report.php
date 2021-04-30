@@ -13,7 +13,7 @@
 <div>
     <hr>
     <form action="<?php echo $app->createUrl('pdf/gerarPdf'); ?>" method="POST" target="TargetWindow">
-    <label class="label">Filtrar Relatório:</label>
+    <label class="label">Filtrar Relatório</label>
         <select name="selectRel" id="selectRel" class="" style="margin-left: 10px;">
             <option value="0">--Selecione--</option>
             <option value="1">Relação de Inscritos</option>
@@ -28,6 +28,7 @@
     </form>
 </div>
 <div>
+
     <?php 
         $entity = $this->controller->requestedEntity;
         $url = $app->createUrl('oportunidade/'.$entity->id);

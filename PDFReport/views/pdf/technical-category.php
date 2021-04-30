@@ -19,7 +19,19 @@
                     <th style="width: 10%" class="text-center">Classificação</th>
                     <th class="space-tbody-15">Inscrição</th>
                     <th>Nome</th>
+                    <?php 
+                    if($preliminary) :
+                    ?>
+                    <th class="text-center space-tbody-10">Nota</th>
+                    <?php 
+                    endif;
+                    
+                    if($preliminary == false) :
+                    ?>
                     <th class="text-center space-tbody-10">Nota Def.</th>
+                    <?php 
+                    endif;
+                    ?>
                 </tr>
             </thead>
             <tbody>
@@ -39,7 +51,15 @@
                         ?>
                         <td class="space-tbody-15"><?php echo $nameSub->number; ?></td>
                         <td><?php echo $nameSub->owner->name; ?></td>
-                        <td class="text-center space-tbody-10"><?php echo $nameSub->consolidatedResult; ?></td>
+                        <td class="text-center space-tbody-10">
+                            <?php 
+                                if($preliminary){
+                                    echo $nameSub->preliminaryResult;
+                                }else{
+                                    echo $nameSub->consolidatedResult;
+                                }; 
+                            ?>
+                        </td>
                     </tr>
                 <?php
                 //EXCLUINDO O INDICE DO ARRAY PARA O PROXIMO LOOP

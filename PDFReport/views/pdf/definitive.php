@@ -4,7 +4,8 @@
     $nameOpportunity = $sub[0]->opportunity->name;
     $opp = $app->view->jsObject['opp'];
     $verifyResource = $this->verifyResource($this->postData['idopportunityReport']);
-    $claimDisabled = $app->view->jsObject['claimDisabled']; 
+    $claimDisabled = $app->view->jsObject['claimDisabled'];
+   
 ?>
 
 <div class="container">
@@ -25,6 +26,11 @@
         $type = $opp->evaluationMethodConfiguration->type->id;
         //NAO TEM RECURSO OU DESABILITADO
         if(empty($claimDisabled) || $claimDisabled == 1) {
+            // dump('dd');
+            //   dump($claimDisabled);
+            //   dump($type);
+            //   dump($opp->registrationCategories);
+            //   die;
             // nao tem categoria, tecnica e nao tem recurso 
             if($opp->registrationCategories == "" &&  $type == 'technical'){
                 include_once('technical-no-category.php');
@@ -33,6 +39,7 @@
             }
             // tem categoria, tecnica e nao tem recurso
             if($opp->registrationCategories !== "" &&  $type == 'technical' ){
+                $preliminary = false;
                 include_once('technical-category.php');
             }elseif($opp->registrationCategories !== "" &&  $type == 'simple' || $type == 'documentary'){
                 include_once('simple-documentary-category.php');
@@ -47,6 +54,15 @@
             // }
             
         }
+        
+        
+        // if($opp->registrationCategories == "" && $type == 'technical'){
+        //     include_once('defSimpleNoCat.php');
+        // }
+        // else{
+        //     include_once('defSimpleWithCat.php');
+        // }
+
     ?>
 
 </div>
