@@ -12,28 +12,24 @@ class Pdf extends \MapasCulturais\Controller{
         ini_set('display_errors', 1);
         error_reporting(E_ALL);
         $app = App::i();
-        if($this->postData['selectRel'] != 1) {
-            
-        }
         $regs       = "";
         $title      = "";
-        $opp        = "";
         $template   = "";
+        //NULO PARA CASOS DE NÃO TER RECURSO
+        $claimDisabled = null;
         switch ($this->postData['selectRel']) {
             case 0:
-                # code...
+                $_SESSION['error'] = "Ops! Você deve selecionar uma opção.";
+                $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport'].'#/tab=inscritos'), 401);
                 break;
             case 1:
-                $regs = $this->oportunityRegistrationApreved($this->postData['idopportunityReport']);
-                if(empty($regs['regs'])){
-                    $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
-                }
+                $regs = $this->oportunityRegistrationAproved($this->postData['idopportunityReport'], 'ALL');
                 $title      = 'Relatório de inscritos na oportunidade';
                 $template   = 'pdf/subscribers';
                 break;
             case 2:
                 //BUSCANDO TODOS OS REGISTROS
-                $regs = $this->oportunityRegistrationApreved($this->postData['idopportunityReport']);
+                $regs = $this->oportunityRegistrationAproved($this->postData['idopportunityReport'], 10);
                 if(empty($regs['regs'])){
                     $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
                 }
@@ -61,16 +57,38 @@ class Pdf extends \MapasCulturais\Controller{
                 //SE OS DOIS VALORES BATEREM, ENTÃO GERA O PDF
                 //O PDF SOMENTE SERÁ GERADO NA EVENTUALIDADE DA AOPORTUNIDADE ESTÁ PUBLICADA E OS RECURSOS TBM ESTIVEREM PUBLICADOS
                 if($countPublish == count($resource) && $countPublish > 0 && count($resource) > 0) {
-                    $regs = $this->oportunityRegistrationApreved($this->postData['idopportunityReport']);
+                    $regs = $this->oportunityRegistrationAproved($this->postData['idopportunityReport'], 10);
                     $title      = 'Resultado Definitivo do Certame';
                     $template   = 'pdf/definitive';
-                }else{
+
+                }elseif($countPublish == count($resource) && $countPublish == 0 && count($resource) == 0){
                     //SE NÃO, VOLTA PARA A PÁGINA DA OPORTUNIDADE COM AVISO
-                    $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
+                    //$app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
+                    $regs = $this->oportunityRegistrationAproved($this->postData['idopportunityReport'], 10);
+                
+                    if(empty($regs['regs'])) {
+                        $_SESSION['error'] = "Ops! Você deve publicar a oportunidade para esse relatório";
+                        $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport'].'#/tab=inscritos'), 401);
+                    }
+                    //VERIFICANDO SE TEM RECURSO
+                    $verifyResource = $this->verifyResource($this->postData['idopportunityReport']);
+
+                    //SE TIVER RECURSO, RECEBE O VALOR QUE ESTÁ NA TABELA
+                    if(isset($verifyResource[0])){
+                        $claimDisabled = $verifyResource[0]->value;
+                    }
+                    //EM CASOS DE TER INSCRIÇÃO MAS NÃO TEM RECURSO OU ESTÁ DESABILITADO
+                    if(isset($regs['regs'][0]) && empty($verifyResource) || $claimDisabled == 1 ){
+                        $title      = 'Resultado Definitivo do Certame';
+                        $template   = 'pdf/definitive';
+                    }else{
+                        $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport'].'#/tab=inscritos'), 401);
+                    }
+                   
                 }
                 break;
             case 4:
-                $regs = $this->oportunityRegistrationApreved($this->postData['idopportunityReport']);
+                $regs = $this->oportunityRegistrationAproved($this->postData['idopportunityReport'], 10);
                 if(empty($regs['regs'])){
                     $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
                 }
@@ -81,9 +99,11 @@ class Pdf extends \MapasCulturais\Controller{
                 $app->redirect($app->createUrl('oportunidade/'.$this->postData['idopportunityReport']), 401);
                 break;
         }
+        // dump(getType($regs));
         $app->view->jsObject['opp'] = $regs['opp'];
         $app->view->jsObject['subscribers'] = $regs['regs'];
         $app->view->jsObject['title'] = $title;
+        $app->view->jsObject['claimDisabled'] = $claimDisabled;
 
         $content = $app->view->fetch($template);
         //$content = $app->render('pdf/layout', array('report' => $report)); 
@@ -102,19 +122,34 @@ class Pdf extends \MapasCulturais\Controller{
      * @param [integer] $idopportunity
      * @return void array
      */
-    function oportunityRegistrationApreved($idopportunity) 
+    function oportunityRegistrationAproved($idopportunity, $status) 
     {
         $app = App::i();
         $opp = $app->repo('Opportunity')->find($idopportunity);
-        $regs = $app->repo('Registration')->findBy(
-            [
-            'opportunity' => $idopportunity,
-            'status' => 10
-            ]
-        );
-
+        
+        if($status == 10) {
+            $dql = "SELECT r
+                    FROM 
+                    MapasCulturais\Entities\Registration r
+                    WHERE r.opportunity = {$idopportunity}
+                    AND r.status = 10 ORDER BY r.consolidatedResult DESC";
+            $query = $app->em->createQuery($dql);
+            $regs = $query->getResult();
+        }else{
+            $regs = $app->repo('Registration')->findBy(
+                [
+                'opportunity' => $idopportunity
+                ]
+            );
+        }
+        
         return ['opp' => $opp, 'regs' => $regs];
     }
 
-}
+    function verifyResource($idOportunidade) {
+        $app = App::i();
+        $opp = $app->repo('OpportunityMeta')->findBy(['owner'=>$idOportunidade,'key'=>'claimDisabled']);
+        return $opp;
+    }
 
+}

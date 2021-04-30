@@ -23,7 +23,7 @@
                 <th>Nome</th>
                 <th>Categoria</th>
                 <th>Enviado em</th>
-                <th>Estatus</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>

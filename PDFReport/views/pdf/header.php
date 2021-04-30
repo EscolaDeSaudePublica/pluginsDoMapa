@@ -13,8 +13,9 @@
 .table {
   background-color: transparent;
   font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
 }
-caption {
+.caption {
   padding-top: 8px;
   padding-bottom: 8px;
   color: #777;
@@ -206,6 +207,9 @@ table th[class*="col-"] {
 .table-responsive {
   min-height: .01%;
   overflow-x: auto;
+}
+.fontArial {
+  font-family: Arial !important;
 }
 </style>
 <table width="100%" >

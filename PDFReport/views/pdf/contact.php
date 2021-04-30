@@ -17,7 +17,7 @@
         </tr>
     </table>
     <br>
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped">
         <thead>
             <tr style="background-color: #009353; color:white">
                 <th>Inscrição</th>
@@ -27,9 +27,7 @@
         </thead>
         <tbody>
         </tbody>
-        <?php foreach ($contact as $key => $value) {
-                //$agent = $app->repo('Agent')->find($value->owner->id); 
-        ?>
+        <?php foreach ($contact as $key => $value) { ?>
         <tr>
             <td>
                 <?php echo $value->number; ?>
@@ -38,7 +36,16 @@
                 <?php echo $value->owner->name; ?>
             </td>
             <td>
-                <?php echo $value->owner->metadata['emailPrivado']; ?>
+                <?php 
+                    if(!isset($value->owner->metadata['emailPrivado']))
+                    {
+                        echo "";
+                    }
+                    else
+                    {
+                        echo $value->owner->metadata['emailPrivado'];
+                    }
+                ?>
             </td>
         </tr>
         <?php } ?>
