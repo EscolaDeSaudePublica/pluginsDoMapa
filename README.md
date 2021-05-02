@@ -59,4 +59,12 @@ Por exemplo:
 ```
 git clone -b  PDFReport  https://github.com/EscolaDeSaudePublica/pluginsDoMapa.git
 ```
+Precisa rodar o composer com os seguintes comandos
+``` curl -O "https://getcomposer.org/download/1.10.17/composer.phar" ```
+``` chmod a+x composer.phar ```
+``` sudo mv composer.phar /usr/local/bin/composer```
+```composer update ```
 
+(dentro do container)
+
+``` sudo chmod -R 777 vendor/dompdf/dompdf/lib ```
